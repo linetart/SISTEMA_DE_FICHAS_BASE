@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Além do Sangue - Quem está assistindo?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SISTEMA DE FICHAS</h1>
+        <p class="instrucao">Escolha seu personagem abaixo</p>
+
+        <div class="wrapper-personagens">
+            <div class="personagens" id="personagensContainer"></div>
+            
+            <div class="botoes">
+                <button onclick="abrirGerenciador()" class="btn-mestre">ÁREA DO MESTRE</button>
+            </div>
+
+            <button onclick="abrirGerenciador()" class="gerenciador-icon" title="Configurações">⚙️</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CHAVE -->
+    <div id="modalChave" class="modal">
+        <div class="modal-content">
+            <h2 id="nomepersonagem"></h2>
+            <div id="erroDiv" class="erro"></div>
+            <input 
+                type="password" 
+                id="inputChave" 
+                placeholder="Digite a chave de acesso"
+                onkeypress="if(event.key === 'Enter') verificarChave()"
+            >
+            <div class="modal-buttons">
+                <button onclick="verificarChave()">Entrar</button>
+                <button onclick="fecharModal()" style="border-color: #666; color: #666;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE GERENCIADOR -->
+    <div id="modalGerenciador" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>Gerenciar Perfis</h2>
+            <div id="gerenciadorConteudo"></div>
+            <button onclick="fecharModalGerenciador()" style="width: 100%; margin-top: 20px;">Fechar</button>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

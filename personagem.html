@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha do Personagem</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="personagem.css">
+</head>
+<body>
+    <div class="header">
+        <h1>FICHA DO PERSONAGEM</h1>
+        <button class="btn-voltar" onclick="voltarInicio()">← Voltar</button>
+    </div>
+
+    <div class="container">
+        <div class="main-grid">
+            <!-- ESQUERDA -->
+            <div>
+                <div class="secao-esquerda">
+                    <div class="foto-container">
+                        <img id="fotoPrincipal" src="" alt="Foto do Personagem">
+                    </div>
+
+                    <div class="campo-editavel">
+                        <label>Nome:</label>
+                        <input type="text" id="inputNome" placeholder="Nome do Personagem" onchange="atualizarNomeInicio()">
+                    </div>
+
+                    <div class="campo-editavel">
+                        <label>Nível:</label>
+                        <input type="number" id="inputNivel" value="1" min="1" onchange="salvarDados()">
+                    </div>
+
+                    <div class="campo-editavel">
+                        <label>Classe:</label>
+                        <input type="text" id="inputClasse" placeholder="Classe do Personagem" onchange="salvarDados()">
+                    </div>
+                </div>
+
+                <!-- ATRIBUTOS -->
+                <div class="secao-atributos">
+                    <h2>Atributos</h2>
+                    <div class="atributos-grid">
+                        <div class="atributo">
+                            <span class="atributo-nome">FOR</span>
+                            <input type="number" class="atributo-input" id="atributo-FOR" value="0" onchange="salvarDados()">
+                        </div>
+                        <div class="atributo">
+                            <span class="atributo-nome">DES</span>
+                            <input type="number" class="atributo-input" id="atributo-DES" value="0" onchange="salvarDados()">
+                        </div>
+                        <div class="atributo">
+                            <span class="atributo-nome">CON</span>
+                            <input type="number" class="atributo-input" id="atributo-CON" value="0" onchange="salvarDados()">
+                        </div>
+                        <div class="atributo">
+                            <span class="atributo-nome">INT</span>
+                            <input type="number" class="atributo-input" id="atributo-INT" value="0" onchange="salvarDados()">
+                        </div>
+                        <div class="atributo">
+                            <span class="atributo-nome">SAB</span>
+                            <input type="number" class="atributo-input" id="atributo-SAB" value="0" onchange="salvarDados()">
+                        </div>
+                        <div class="atributo">
+                            <span class="atributo-nome">CAR</span>
+                            <input type="number" class="atributo-input" id="atributo-CAR" value="0" onchange="salvarDados()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BARRAS DE VIDA E MANA -->
+                <div class="secao-barras">
+                    <div class="barra-grupo barra-vida-vertical">
+                        <div class="barra-label">VIDA</div>
+                        <div class="barra-botoes-container">
+                            <div class="barra-visual-vertical">
+                                <div class="barra-preenchimento-vertical" id="preencheVida"></div>
+                            </div>
+                            <div class="botoes-barra">
+                                <button class="btn-barra btn-plus" onclick="aumentarVida(5)">+5</button>
+                                <button class="btn-barra btn-plus" onclick="aumentarVida(1)">+1</button>
+                                <button class="btn-barra btn-moins" onclick="diminuirVida(1)">-1</button>
+                                <button class="btn-barra btn-moins" onclick="diminuirVida(5)">-5</button>
+                            </div>
+                        </div>
+                        <div class="valores-barra-vertical">
+                            <input type="number" class="valor-input-vertical" id="vidaAtual" value="150" onchange="atualizarBarras()">
+                            <span>/</span>
+                            <input type="number" class="valor-input-vertical" id="vidaMax" value="150" onchange="atualizarBarras()">
+                        </div>
+                    </div>
+
+                    <div class="barra-grupo barra-mana-vertical">
+                        <div class="barra-label">MANA</div>
+                        <div class="barra-botoes-container">
+                            <div class="barra-visual-vertical">
+                                <div class="barra-preenchimento-vertical" id="preencheMana"></div>
+                            </div>
+                            <div class="botoes-barra">
+                                <button class="btn-barra btn-plus" onclick="aumentarMana(5)">+5</button>
+                                <button class="btn-barra btn-plus" onclick="aumentarMana(1)">+1</button>
+                                <button class="btn-barra btn-moins" onclick="diminuirMana(1)">-1</button>
+                                <button class="btn-barra btn-moins" onclick="diminuirMana(5)">-5</button>
+                            </div>
+                        </div>
+                        <div class="valores-barra-vertical">
+                            <input type="number" class="valor-input-vertical" id="manaAtual" value="100" onchange="atualizarBarras()">
+                            <span>/</span>
+                            <input type="number" class="valor-input-vertical" id="manaMax" value="100" onchange="atualizarBarras()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CENTRO - PERÍCIAS -->
+            <div class="secao">
+                <h2>Perícias</h2>
+                <div class="lista-pericias" id="periciasContainer"></div>
+            </div>
+
+            <!-- DIREITA - ATAQUES E PODERES/MAGIAS -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1;">
+                <div class="secao-direita-lateral">
+                    <h2 style="font-size: 12px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 8px;">Ataques</h2>
+                    <div class="lista-ataques" id="ataquesContainer"></div>
+                </div>
+
+                <!-- PODERES E MAGIAS -->
+                <div class="secao-poderes-magias" style="margin: 0;">
+                    <div class="abas-poderes-magias">
+                        <div class="aba-poderes-magias ativa" onclick="trocarAbaPoderMagia('poderes', this)">PODERES</div>
+                        <div class="aba-poderes-magias" onclick="trocarAbaPoderMagia('magias', this)">MAGIAS</div>
+                        <button class="btn-adicionar-poder" onclick="abrirModalPoderMagia()">+</button>
+                    </div>
+
+                    <div id="conteudoPoderes" class="conteudo-poder-magia ativo">
+                        <div class="itens-poder-magia" id="listaPoderes"></div>
+                    </div>
+
+                    <div id="conteudoMagias" class="conteudo-poder-magia">
+                        <div class="itens-poder-magia" id="listaMagias"></div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- DADOS -->
+        <div class="secao-dados">
+            <h2>Dados</h2>
+            <div class="dados-grid">
+                <div class="dado" onclick="rolarDado(20, 'D20')">
+                    <div class="dado-visual">
+                        <img src="d20.svg" alt="D20" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D20</div>
+                </div>
+                <div class="dado" onclick="rolarDado(12, 'D12')">
+                    <div class="dado-visual">
+                        <img src="d12.svg" alt="D12" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D12</div>
+                </div>
+                <div class="dado" onclick="rolarDado(10, 'D10')">
+                    <div class="dado-visual">
+                        <img src="d10.svg" alt="D10" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D10</div>
+                </div>
+                <div class="dado" onclick="rolarDado(8, 'D8')">
+                    <div class="dado-visual">
+                        <img src="d8.svg" alt="D8" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D8</div>
+                </div>
+                <div class="dado" onclick="rolarDado(6, 'D6')">
+                    <div class="dado-visual">
+                        <img src="d6.svg" alt="D6" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D6</div>
+                </div>
+                <div class="dado" onclick="rolarDado(4, 'D4')">
+                    <div class="dado-visual">
+                        <img src="d4.svg" alt="D4" style="width: 80px; height: 80px; object-fit: contain;">
+                    </div>
+                    <div class="dado-label">D4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RESULTADO -->
+    <div id="modalResultado" class="modal">
+        <div class="modal-resultado">
+            <h2 id="nomeDado"></h2>
+            <div class="resultado-numero" id="numeroResultado">0</div>
+            <button onclick="fecharModal()">Fechar</button>
+        </div>
+    </div>
+
+    <!-- MODAL ADICIONAR PODER/MAGIA -->
+    <div id="modalPoderMagia" class="modal">
+        <div class="modal-poder-magia">
+            <h2>Adicionar Poder/Magia</h2>
+            <div class="form-grupo">
+                <label>Tipo:</label>
+                <select id="tipoPoderMagia">
+                    <option value="poderes">Poder</option>
+                    <option value="magias">Magia</option>
+                </select>
+            </div>
+            <div class="form-grupo">
+                <label>Nome:</label>
+                <input type="text" id="nomePoderMagia" placeholder="Nome do poder/magia">
+            </div>
+            <div class="form-grupo">
+                <label>Descrição:</label>
+                <textarea id="descricaoPoderMagia" placeholder="Descrição do poder/magia"></textarea>
+            </div>
+            <div class="botoes-modal">
+                <button class="btn-salvar" onclick="salvarPoderMagia()">Salvar</button>
+                <button class="btn-cancelar" onclick="fecharModalPoderMagia()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="personagem.js"></script>
+</body>
+</html>

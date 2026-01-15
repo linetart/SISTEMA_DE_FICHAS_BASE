@@ -1,0 +1,6 @@
+header {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  min-height: 100px; /* Define uma altura mínima para melhor visualização */
+}

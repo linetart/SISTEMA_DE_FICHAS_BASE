@@ -53,13 +53,11 @@ function carregarPodereseMagias() {
     const personagensObj = personagensData ? JSON.parse(personagensData) : {};
     
     let poderes = [
-        { nome: 'Poder 1', descricao: 'Descrição do poder 1', padrao: true },
-        { nome: 'Poder 2', descricao: 'Descrição do poder 2', padrao: true }
+
     ];
 
     let magias = [
-        { nome: 'Magia Acelerada - Aprimore', descricao: 'Muda a execução da magia para ação livre. Você só pode aplicar este aprimoramento em magias com execução de movimento, padrão ou completa e só pode lançar uma magia como ação livre por rodada. Custo: +4 PM. Pré-requisito: lançar magias de 2º círculo', padrao: true },
-        { nome: 'Magia limitada', descricao: 'Você soma seu atributo-chave no limite de PM que pode gastar numa magia. Por exemplo, um arcanista de 5º nível com int 4 e este poder pode gastar até 9 PM em cada magia.', padrao: true }
+
     ];
 
     // Carregar poderes e magias salvos do localStorage

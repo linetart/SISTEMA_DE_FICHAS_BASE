@@ -1,5 +1,51 @@
 let personagem = null;
 
+function tocarSomDado() {
+    const audio = document.getElementById('somDado');
+
+    if (!audio) {
+        console.error('Elemento <audio id="somDado"> não encontrado');
+        return;
+    }
+
+    audio.currentTime = 0;
+
+    audio.play().catch(err => {
+        console.error('Erro ao tocar som:', err);
+    });
+}
+
+const periciasAtributos = {
+    Acrobacia: 'DES',
+    Atletismo: 'FOR',
+    Furtividade: 'DES',
+    Iniciativa: 'DES',
+    Percepção: 'SAB',
+    Investigação: 'INT',
+    Vontade: 'SAB',
+    Luta: 'FOR',
+    Pontaria: 'DES',
+    Misticismo: 'INT',
+    Religião: 'SAB',
+    Diplomacia: 'CAR',
+    Enganação: 'CAR',
+    Intimidação: 'CAR',
+    Cura: 'SAB',
+    Fortitude: 'CON',
+    Reflexos: 'DES',
+    Sobrevivência: 'SAB',
+    Conhecimento: 'INT',
+    Guerra: 'INT',
+    Nobreza: 'INT',
+    Jogatina: 'CAR',
+    Pilotagem: 'DES',
+    Cavalgar: 'DES',
+    Ofício: 'INT',
+    Atuação: 'CAR',
+    Ladinagem: 'DES'
+};
+
+
 function carregarPersonagem() {
     const personagemAtivo = localStorage.getItem('personagemAtivo');
     if (!personagemAtivo) {
@@ -149,12 +195,34 @@ function trocarAbaPoderMagia(aba, elemento) {
 
 function carregarPericias() {
     const pericias = [
-        'Acrobacia', 'Adestramento', 'Atletismo', 'Atuação', 'Cavalgar',
-        'Conhecimento', 'Cura', 'Diplomacia', 'Enganação', 'Fortitude',
-        'Furtividade', 'Guerra', 'Iniciativa', 'Intimidação', 'Investigação',
-        'Jogatina', 'Ladinagem', 'Luta', 'Misticismo', 'Nobreza',
-        'Ofício', 'Percepção', 'Pilotagem', 'Pontaria', 'Reflexos',
-        'Religião', 'Sobrevivência', 'Vontade'
+        'Acrobacia', 
+        'Adestramento', 
+        'Atletismo', 
+        'Atuação', 
+        'Cavalgar',
+        'Conhecimento', 
+        'Cura', 
+        'Diplomacia', 
+        'Enganação', 
+        'Fortitude',
+        'Furtividade', 
+        'Guerra', 
+        'Iniciativa', 
+        'Intimidação', 
+        'Investigação',
+        'Jogatina', 
+        'Ladinagem', 
+        'Luta', 
+        'Misticismo', 
+        'Nobreza',
+        'Ofício', 
+        'Percepção', 
+        'Pilotagem', 
+        'Pontaria', 
+        'Reflexos',
+        'Religião', 
+        'Sobrevivência', 
+        'Vontade'
     ];
 
     const container = document.getElementById('periciasContainer');
@@ -273,12 +341,33 @@ function rolarDado(lados, nome) {
     document.getElementById('modalResultado').classList.add('ativo');
 }
 
-function rolarD20Pericia(nomePericia, bonus) {
+function rolarD20Pericia(nomePericia, bonusPericia) {
+
+    tocarSomDado(); // 🔊 TEM QUE ESTAR AQUI
+
     const d20 = Math.floor(Math.random() * 20) + 1;
-    const total = d20 + bonus;
-    
-    document.getElementById('nomeDado').textContent = `${nomePericia}`;
-    document.getElementById('numeroResultado').innerHTML = `<strong>D20: ${d20} + ${bonus} = ${total}</strong>`;
+
+    const atributoRelacionado = periciasAtributos[nomePericia];
+
+    let bonusAtributo = 0;
+    if (atributoRelacionado) {
+        const inputAtributo = document.getElementById(
+            `atributo-${atributoRelacionado.toUpperCase()}`
+        );
+        bonusAtributo = parseInt(inputAtributo.value) || 0;
+    }
+
+    // Soma tudo
+    const total = d20 + bonusPericia + bonusAtributo;
+
+    // Mostra no modal
+    document.getElementById('nomeDado').textContent = nomePericia;
+    document.getElementById('numeroResultado').innerHTML = `
+        <strong>
+            ${d20} + ${bonusPericia} + ${bonusAtributo} = ${total}
+        </strong>
+    `;
+
     document.getElementById('modalResultado').classList.add('ativo');
 }
 

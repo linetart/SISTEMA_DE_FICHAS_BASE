@@ -1,4 +1,5 @@
 let personagem = null;
+let itemParaDeletar = null;
 
 function tocarSomDado() {
     const audio = document.getElementById('somDado');
@@ -55,22 +56,18 @@ function carregarPersonagem() {
 
     personagem = JSON.parse(personagemAtivo);
     
-    // Carregar dados do localStorage se existirem
     const salvo = localStorage.getItem(`ficha_${personagem.id}`);
     if (salvo) {
         const dados = JSON.parse(salvo);
         Object.assign(personagem, dados);
     }
 
-    // Atualizar foto
     document.getElementById('fotoPrincipal').src = personagem.imagem;
 
-    // Carregar campos
     document.getElementById('inputNome').value = personagem.nome;
     document.getElementById('inputNivel').value = personagem.nivel || 1;
     document.getElementById('inputClasse').value = personagem.classe || '';
 
-    // Atributos
     document.getElementById('atributo-FOR').value = personagem.for || 0;
     document.getElementById('atributo-DES').value = personagem.des || 0;
     document.getElementById('atributo-CON').value = personagem.con || 0;
@@ -78,18 +75,15 @@ function carregarPersonagem() {
     document.getElementById('atributo-SAB').value = personagem.sab || 0;
     document.getElementById('atributo-CAR').value = personagem.car || 0;
 
-    // Vida e Mana
     document.getElementById('vidaAtual').value = personagem.vidaAtual || 150;
     document.getElementById('vidaMax').value = personagem.vidaMax || 150;
     document.getElementById('manaAtual').value = personagem.manaAtual || 100;
     document.getElementById('manaMax').value = personagem.manaMax || 100;
 
-    // Perícias e Ataques
     carregarPericias();
     carregarAtaques();
     carregarPodereseMagias();
 
-    // Atualizar barras
     atualizarBarras();
 }
 
@@ -98,15 +92,9 @@ function carregarPodereseMagias() {
     const personagensData = localStorage.getItem('personagensData');
     const personagensObj = personagensData ? JSON.parse(personagensData) : {};
     
-    let poderes = [
+    let poderes = [];
+    let magias = [];
 
-    ];
-
-    let magias = [
-
-    ];
-
-    // Carregar poderes e magias salvos do localStorage
     if (personagensObj[nomePersonagem]) {
         if (personagensObj[nomePersonagem].poderes && personagensObj[nomePersonagem].poderes.length > 0) {
             poderes = [...poderes, ...personagensObj[nomePersonagem].poderes];
@@ -123,7 +111,7 @@ function carregarPodereseMagias() {
                 <span>${poder.nome}</span>
                 <div class="item-poder-magia-acoes">
                     <span class="item-poder-magia-icone">▼</span>
-                    ${!poder.padrao ? `<span class="item-poder-magia-deletar" onclick="deletarPoderMagia('poderes', '${poder.nome}', event)">✕</span>` : ''}
+                    ${!poder.padrao ? `<span class="item-poder-magia-deletar" onclick="abrirModalConfirmacao('poderes', '${poder.nome}', event)">✕</span>` : ''}
                 </div>
             </div>
             <div class="item-poder-magia-descricao">${poder.descricao}</div>
@@ -137,7 +125,7 @@ function carregarPodereseMagias() {
                 <span>${magia.nome}</span>
                 <div class="item-poder-magia-acoes">
                     <span class="item-poder-magia-icone">▼</span>
-                    ${!magia.padrao ? `<span class="item-poder-magia-deletar" onclick="deletarPoderMagia('magias', '${magia.nome}', event)">✕</span>` : ''}
+                    ${!magia.padrao ? `<span class="item-poder-magia-deletar" onclick="abrirModalConfirmacao('magias', '${magia.nome}', event)">✕</span>` : ''}
                 </div>
             </div>
             <div class="item-poder-magia-descricao">${magia.descricao}</div>
@@ -149,13 +137,25 @@ function togglePoder(elemento) {
     elemento.classList.toggle('expandido');
 }
 
-function deletarPoderMagia(tipo, nome, event) {
+// Abre o modal de confirmação
+function abrirModalConfirmacao(tipo, nome, event) {
     event.stopPropagation();
-    
-    if (!confirm(`Tem certeza que deseja deletar "${nome}"?`)) {
-        return;
-    }
+    itemParaDeletar = { tipo, nome };
+    document.getElementById('textoConfirmacao').textContent = `Tem certeza que deseja deletar "${nome}"?`;
+    document.getElementById('modalConfirmacao').classList.add('ativo');
+}
 
+// Fecha o modal de confirmação
+function fecharModalConfirmacao() {
+    document.getElementById('modalConfirmacao').classList.remove('ativo');
+    itemParaDeletar = null;
+}
+
+// Confirma a exclusão
+function confirmarDelecao() {
+    if (!itemParaDeletar) return;
+    
+    const { tipo, nome } = itemParaDeletar;
     const nomePersonagem = document.getElementById('inputNome').value;
     const personagensData = localStorage.getItem('personagensData');
     const personagensObj = personagensData ? JSON.parse(personagensData) : {};
@@ -164,7 +164,6 @@ function deletarPoderMagia(tipo, nome, event) {
         personagensObj[nomePersonagem] = { poderes: [], magias: [] };
     }
 
-    // Remove o item do array
     if (tipo === 'poderes') {
         personagensObj[nomePersonagem].poderes = personagensObj[nomePersonagem].poderes.filter(p => p.nome !== nome);
     } else {
@@ -173,19 +172,15 @@ function deletarPoderMagia(tipo, nome, event) {
 
     localStorage.setItem('personagensData', JSON.stringify(personagensObj));
     carregarPodereseMagias();
+    fecharModalConfirmacao();
 }
 
 function trocarAbaPoderMagia(aba, elemento) {
-    // Remover classe ativa de todas as abas
     document.querySelectorAll('.aba-poderes-magias').forEach(el => el.classList.remove('ativa'));
-    
-    // Adicionar classe ativa à aba clicada
     elemento.classList.add('ativa');
 
-    // Esconder todo conteúdo
     document.querySelectorAll('.conteudo-poder-magia').forEach(el => el.classList.remove('ativo'));
 
-    // Mostrar conteúdo selecionado
     if (aba === 'poderes') {
         document.getElementById('conteudoPoderes').classList.add('ativo');
     } else {
@@ -335,6 +330,7 @@ function atualizarNomeInicio() {
 }
 
 function rolarDado(lados, nome) {
+    tocarSomDado();
     const resultado = Math.floor(Math.random() * lados) + 1;
     document.getElementById('nomeDado').textContent = nome;
     document.getElementById('numeroResultado').textContent = resultado;
@@ -342,25 +338,19 @@ function rolarDado(lados, nome) {
 }
 
 function rolarD20Pericia(nomePericia, bonusPericia) {
-
-    tocarSomDado(); // 🔊 TEM QUE ESTAR AQUI
+    tocarSomDado();
 
     const d20 = Math.floor(Math.random() * 20) + 1;
-
     const atributoRelacionado = periciasAtributos[nomePericia];
 
     let bonusAtributo = 0;
     if (atributoRelacionado) {
-        const inputAtributo = document.getElementById(
-            `atributo-${atributoRelacionado.toUpperCase()}`
-        );
+        const inputAtributo = document.getElementById(`atributo-${atributoRelacionado.toUpperCase()}`);
         bonusAtributo = parseInt(inputAtributo.value) || 0;
     }
 
-    // Soma tudo
     const total = d20 + bonusPericia + bonusAtributo;
 
-    // Mostra no modal
     document.getElementById('nomeDado').textContent = nomePericia;
     document.getElementById('numeroResultado').innerHTML = `
         <strong>
@@ -420,7 +410,7 @@ function salvarPoderMagia() {
     fecharModalPoderMagia();
 }
 
-// Fechar modal ao clicar fora
+// Fechar modais ao clicar fora
 document.getElementById('modalResultado').addEventListener('click', function(e) {
     if (e.target === this) {
         fecharModal();
@@ -432,6 +422,15 @@ if (modalPoderMagia) {
     modalPoderMagia.addEventListener('click', function(e) {
         if (e.target === this) {
             fecharModalPoderMagia();
+        }
+    });
+}
+
+const modalConfirmacao = document.getElementById('modalConfirmacao');
+if (modalConfirmacao) {
+    modalConfirmacao.addEventListener('click', function(e) {
+        if (e.target === this) {
+            fecharModalConfirmacao();
         }
     });
 }
